@@ -21,18 +21,22 @@ public class Menu {
     public void iniciar() {
         int opcao;
         do {
+            limparTela();
             imprimirMenu();
             opcao = lerInteiro("Escolha uma opcao: ");
-            System.out.println();
+            limparTela();
             switch (opcao) {
                 case 1:
                     cadastrarAluno();
+                    pausar();
                     break;
                 case 2:
                     cadastrarCurso();
+                    pausar();
                     break;
                 case 3:
                     matricular();
+                    pausar();
                     break;
                 case 4:
                     listar();
@@ -42,9 +46,20 @@ public class Menu {
                     break;
                 default:
                     System.out.println("Opcao invalida.");
+                    pausar();
             }
-            System.out.println();
         } while (opcao != 0);
+    }
+
+    private void limparTela() {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    private void pausar() {
+        System.out.println();
+        System.out.print("Pressione Enter para continuar...");
+        scanner.nextLine();
     }
 
     private void imprimirMenu() {
@@ -102,21 +117,25 @@ public class Menu {
         System.out.println("  3) Alunos matriculados em um curso");
         System.out.println("  0) Voltar");
         int op = lerInteiro("Escolha: ");
-        System.out.println();
+        limparTela();
         switch (op) {
             case 1:
                 listarTodosAlunos();
+                pausar();
                 break;
             case 2:
                 listarTodosCursos();
+                pausar();
                 break;
             case 3:
                 listarAlunosDoCurso();
+                pausar();
                 break;
             case 0:
                 break;
             default:
                 System.out.println("Opcao invalida.");
+                pausar();
         }
     }
 
