@@ -1,0 +1,238 @@
+================================================================
+ETAPA 3 - PLANO DE IMPLANTACAO (XP)
+Sistema de Gestao de Matriculas - Escola de Idiomas
+Disciplina: 10275 - Engenharia de Software
+Data: 22/05/2026
+Linguagem: JAVA (Java puro, sem build tool)
+Estorias da iteracao 1: US01, US02, US03
+================================================================
+
+Principio orientador (XP): "Fazer o mais simples que funcione".
+Interface: MENU EM CONSOLE.
+Persistencia: EM MEMORIA (listas), sem banco de dados.
+
+
+----------------------------------------------------------------
+1. LINGUAGEM, VERSAO E FERRAMENTAS
+----------------------------------------------------------------
+
+   - Linguagem ........: Java 21 (qualquer 17+ funciona).
+   - Build ............: javac (compilador padrao do JDK).
+   - Execucao .........: java (JRE padrao do JDK).
+   - Testes ...........: classe SistemaTest com main() proprio
+                         e helpers de assercao (sem JUnit).
+   - Editor sugerido ..: VSCode (extensao "Extension Pack for Java").
+
+Por que sem build tool?
+   - Cliente quer simplicidade maxima nesta iteracao.
+   - Projeto pequeno, sem dependencias externas.
+   - Compilar e rodar com 2 comandos do JDK ja basta.
+
+
+----------------------------------------------------------------
+2. ESTRUTURA DE PASTAS E ARQUIVOS
+----------------------------------------------------------------
+
+ExtremeProgramming/
+   README.md                                (instrucoes de uso)
+   .gitignore                               (ignora bin/, *.class)
+   Etapa1_Planejamento.txt                  (ja existe)
+   Etapa2_DesenhoSolucao.txt                (ja existe)
+   Etapa3_PlanoImplantacao.txt              (este arquivo)
+   src/
+      br/com/escola/matriculas/
+         Main.java                          (ponto de entrada)
+         modelo/
+            Aluno.java                      (entidade Aluno)
+            Curso.java                      (entidade Curso)
+            Matricula.java                  (entidade Matricula)
+         servico/
+            Sistema.java                    (regras de negocio)
+         ui/
+            Menu.java                       (laco do menu console)
+   test/
+      br/com/escola/matriculas/
+         servico/
+            SistemaTest.java                (testes das US01..US03)
+   bin/                                     (gerado por javac, ignorado)
+
+
+----------------------------------------------------------------
+3. RESPONSABILIDADE DE CADA ARQUIVO
+----------------------------------------------------------------
+
+[ Main.java ]
+   - Cria a instancia de Sistema.
+   - Cria a instancia de Menu, injetando Sistema.
+   - Chama menu.iniciar().
+
+[ modelo/Aluno.java ]
+   - Atributos: int id, String nome, String email.
+   - Construtor + getters.
+   - toString() para exibicao no console.
+
+[ modelo/Curso.java ]
+   - Atributos: int id, String nome, int vagas.
+   - Construtor + getters.
+   - toString() para exibicao.
+
+[ modelo/Matricula.java ]
+   - Atributos: int id, Aluno aluno, Curso curso.
+   - Construtor + getters.
+   - toString() para exibicao.
+
+[ servico/Sistema.java ]
+   - Listas em memoria:
+        List<Aluno> alunos
+        List<Curso> cursos
+        List<Matricula> matriculas
+   - Contadores incrementais para IDs:
+        int proximoIdAluno, proximoIdCurso, proximoIdMatricula
+   - Metodos publicos (regras de US01..US03):
+        Aluno cadastrarAluno(String nome, String email)
+        Curso cadastrarCurso(String nome, int vagas)
+        Matricula matricular(int alunoId, int cursoId)
+        Aluno buscarAluno(int id)
+        Curso buscarCurso(int id)
+   - Lanca IllegalArgumentException em entradas invalidas
+     (nome vazio, vagas <= 0, aluno/curso inexistente).
+
+[ ui/Menu.java ]
+   - Recebe Sistema no construtor.
+   - Usa java.util.Scanner para ler entrada do usuario.
+   - Imprime o menu de 4 opcoes (1, 2, 3, 0).
+   - Para cada opcao, chama o metodo correspondente em
+     Sistema e mostra mensagem de sucesso ou erro.
+   - Trata IllegalArgumentException exibindo mensagem amigavel.
+
+[ test/.../SistemaTest.java ]
+   - Classe executavel (main proprio) com pequenos
+     helpers de assercao (assertEquals, assertThrows).
+   - Cobre criterios das US01, US02 e US03:
+        - cadastrar aluno valido / nome vazio
+        - cadastrar curso valido / vagas <= 0
+        - matricular com IDs validos / aluno inexistente
+        - matricular com curso inexistente
+
+
+----------------------------------------------------------------
+4. COMO O SISTEMA VAI FUNCIONAR (FLUXO EM EXECUCAO)
+----------------------------------------------------------------
+
+   1. Usuario compila e roda os comandos da secao 5.
+
+   2. Main.java cria Sistema (listas vazias) e Menu, e
+      chama menu.iniciar().
+
+   3. Menu.java entra em laco while (opcao != 0):
+         - imprime cabecalho + opcoes;
+         - le numero digitado;
+         - chama o metodo correto em Sistema;
+         - exibe mensagem de retorno.
+
+   4. Sistema.java aplica as regras:
+         - gera novo ID;
+         - valida entrada;
+         - cria objeto (Aluno/Curso/Matricula);
+         - adiciona na lista correspondente;
+         - retorna o objeto criado.
+
+   5. Quando o usuario digita 0, Menu encerra o laco e
+      o programa termina. Como tudo esta em memoria, os
+      dados sao perdidos ao sair - comportamento aceito
+      nesta iteracao (decisao XP: simplicidade).
+
+
+----------------------------------------------------------------
+5. COMANDOS DE USO
+----------------------------------------------------------------
+
+   Compilar (codigo principal):
+      javac -d bin -sourcepath src \
+            src/br/com/escola/matriculas/Main.java
+
+   Rodar a aplicacao:
+      java -cp bin br.com.escola.matriculas.Main
+
+   Compilar e rodar os testes:
+      javac -d bin -sourcepath src:test \
+            test/br/com/escola/matriculas/servico/SistemaTest.java
+      java -cp bin br.com.escola.matriculas.servico.SistemaTest
+
+
+----------------------------------------------------------------
+6. ORDEM DE IMPLEMENTACAO (TDD-LIGHT, ESTILO XP)
+----------------------------------------------------------------
+
+A ordem segue a dependencia entre as estorias (US01 -> US02 ->
+US03), e dentro de cada estoria escrevemos teste -> codigo
+minimo -> refatorar.
+
+   1) Criar estrutura de pastas (src/, test/, bin/).
+   2) US01 - Cadastrar Aluno:
+         a) escrever teste cadastrarAlunoValido()
+         b) criar Aluno.java
+         c) implementar Sistema.cadastrarAluno()
+         d) escrever teste para nome vazio
+         e) tratar validacao
+   3) US02 - Cadastrar Curso (mesma sequencia).
+   4) US03 - Matricular:
+         a) testes de matricula valida e dos dois erros
+         b) criar Matricula.java
+         c) implementar Sistema.matricular() usando
+            buscarAluno() e buscarCurso()
+   5) Criar Menu.java (camada de console).
+   6) Criar Main.java (ligacao final).
+   7) Teste manual ponta-a-ponta + demo ao cliente.
+
+
+----------------------------------------------------------------
+7. CRITERIOS DE PRONTO (DEFINITION OF DONE) DA ITERACAO 1
+----------------------------------------------------------------
+
+   [ ] Codigo compila sem warning relevante.
+   [ ] SistemaTest exibe "0 falha(s)" ao rodar.
+   [ ] Menu executa as 3 opcoes sem quebrar.
+   [ ] Cada US tem ao menos 1 teste do caminho feliz e
+       1 teste de validacao.
+   [ ] README explica como rodar e como testar.
+   [ ] Commit no Git ao final de cada US concluida.
+
+
+----------------------------------------------------------------
+8. O QUE NAO ENTRA NESTA ITERACAO (DECISAO XP)
+----------------------------------------------------------------
+
+   - Banco de dados (H2, MySQL, etc.).
+   - Interface grafica ou web.
+   - Unicidade de e-mail.
+   - Controle de vagas disponiveis.
+   - Duplicidade de matricula.
+   - Listagem de matriculas (US04).
+   - Frameworks de teste (JUnit, etc.).
+   - Empacotamento como instalador.
+
+Esses itens entram quando o cliente pedir, em iteracoes
+futuras, conforme o principio de Pequenas Releases.
+
+
+----------------------------------------------------------------
+9. PRATICAS XP APLICADAS NESTA ETAPA
+----------------------------------------------------------------
+
+   - Simplicidade: Java puro, listas em memoria, console,
+     zero dependencias externas.
+   - Testes Automatizados: SistemaTest cobre as US com
+     assercoes proprias, executado com 'java'.
+   - Pequenas Releases: ao final da iteracao ja existe
+     binario rodavel para demo.
+   - Refatoracao: estrutura em pacotes (modelo, servico,
+     ui) preparada para crescer sem reescrita.
+   - Padrao de Codigo: convencao Java padrao (camelCase
+     em metodos/variaveis, PascalCase em classes).
+   - Integracao Continua (manual nesta etapa): rodar
+     SistemaTest antes de cada commit.
+
+================================================================
+FIM - ETAPA 3
+================================================================
