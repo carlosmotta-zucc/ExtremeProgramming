@@ -1,0 +1,111 @@
+================================================================
+ETAPA 1 - PLANEJAMENTO (XP)
+Sistema de Gestao de Matriculas - Escola de Idiomas
+Disciplina: 10275 - Engenharia de Software
+Data: 22/05/2026
+================================================================
+
+
+----------------------------------------------------------------
+1. ESTORIAS DE USUARIO (Leitura)
+----------------------------------------------------------------
+
+US01 - Cadastrar Aluno
+   "Como atendente, quero cadastrar um aluno para manter seus
+    dados no sistema."
+   Criterios de Aceitacao:
+     - O sistema deve permitir informar nome e e-mail do aluno.
+     - O aluno deve ficar armazenado no sistema.
+     - Nao deve ser possivel cadastrar aluno com nome vazio.
+
+US02 - Cadastrar Curso
+   "Como atendente, quero cadastrar um curso para disponibiliza-lo
+    para matricula."
+   Criterios de Aceitacao:
+     - O sistema deve permitir informar nome do curso e quantidade
+       de vagas.
+     - O curso deve ficar armazenado no sistema.
+     - A quantidade de vagas deve ser maior que zero.
+
+US03 - Matricular Aluno em Curso
+   "Como atendente, quero matricular um aluno em um curso para
+    registrar sua inscricao."
+   Criterios de Aceitacao:
+     - So e possivel matricular um aluno ja cadastrado.
+     - So e possivel matricular em curso ja cadastrado.
+     - A matricula deve ficar registrada no sistema.
+
+
+----------------------------------------------------------------
+2. DUVIDAS DISCUTIDAS COM O CLIENTE
+----------------------------------------------------------------
+
+----------------------------------------------------------------
+3. ESTIMATIVAS DE COMPLEXIDADE
+----------------------------------------------------------------
+
+Escala adotada (Story Points - sequencia simplificada):
+   1 = Muito simples    2 = Simples    3 = Media
+   5 = Alta             8 = Muito alta
+
++--------+------------------------------+--------+----------+
+|  ID    |  Estoria                     | Pontos | Esforco  |
++--------+------------------------------+--------+----------+
+| US01   | Cadastrar Aluno              |   2    | Simples  |
+| US02   | Cadastrar Curso              |   2    | Simples  |
+| US03   | Matricular Aluno em Curso    |   3    | Media    |
++--------+------------------------------+--------+----------+
+| TOTAL DA ITERACAO                     |   7    |          |
++---------------------------------------+--------+----------+
+
+Justificativa das estimativas:
+   - US01 (2 pts): cadastro basico com 1 validacao (nome vazio).
+   - US02 (2 pts): cadastro basico com 1 validacao (vagas > 0).
+     Mesmo nivel de US01.
+   - US03 (3 pts): depende de US01 e US02; envolve duas
+     verificacoes de existencia e criacao de relacionamento
+     entre entidades.
+
+
+----------------------------------------------------------------
+4. ESTORIAS ESCOLHIDAS PARA A PRIMEIRA ITERACAO
+----------------------------------------------------------------
+
+Selecionadas para a iteracao 1 (1 semana):
+
+   [X] US01 - Cadastrar Aluno
+   [X] US02 - Cadastrar Curso
+   [X] US03 - Matricular Aluno em Curso
+
+Total estimado: 7 pontos
+
+Ordem de implementacao (com base na dependencia):
+   1) US01 - Cadastrar Aluno   (pre-requisito de US03)
+   2) US02 - Cadastrar Curso   (pre-requisito de US03)
+   3) US03 - Matricular Aluno em Curso
+
+Motivacao da priorizacao (cliente):
+   Estas tres estorias entregam o fluxo minimo de valor:
+   sem aluno e sem curso nao ha matricula. Sao a base do
+   sistema e permitem demonstrar funcionalidade end-to-end
+   ja na primeira release curta, alinhado ao principio XP
+   de "fazer o mais simples que funcione".
+
+
+----------------------------------------------------------------
+5. PRATICAS XP APLICADAS NA ETAPA 1
+----------------------------------------------------------------
+
+   - Jogo do Planejamento: estorias lidas, estimadas e
+     priorizadas com o cliente.
+   - Cliente Presente: duvidas resolvidas diretamente com
+     o cliente antes de iniciar a implementacao.
+   - Pequenas Releases: escopo enxuto para entrega rapida
+     ao final da iteracao curta.
+   - Simplicidade: validacoes adiadas (ex.: unicidade de
+     e-mail, controle de vagas) so entrarao quando o
+     cliente confirmar a necessidade.
+
+================================================================
+FIM - ETAPA 1
+================================================================

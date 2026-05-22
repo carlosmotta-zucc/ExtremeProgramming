@@ -1,0 +1,165 @@
+================================================================
+ETAPA 2 - DESENHO DA SOLUCAO (XP)
+Sistema de Gestao de Matriculas - Escola de Idiomas
+Disciplina: 10275 - Engenharia de Software
+Data: 22/05/2026
+Estorias da iteracao 1: US01, US02, US03
+================================================================
+
+Principio orientador: "Fazer o mais simples que funcione".
+Interface escolhida: MENU EM CONSOLE.
+
+
+----------------------------------------------------------------
+1. VISAO GERAL DA SOLUCAO
+----------------------------------------------------------------
+
+Aplicacao de linha de comando (console) com um menu de texto.
+Os dados sao mantidos em memoria (listas) durante a execucao -
+sem banco de dados, sem arquivo - conforme o principio de
+simplicidade do XP. Persistencia podera ser adicionada em
+iteracao futura, se o cliente pedir.
+
+
+----------------------------------------------------------------
+2. CLASSES
+----------------------------------------------------------------
+
+Aluno
+   - id: int
+   - nome: str
+   - email: str
+
+Curso
+   - id: int
+   - nome: str
+   - vagas: int
+
+Matricula
+   - id: int
+   - aluno: Aluno
+   - curso: Curso
+
+Sistema (controlador principal)
+   - alunos: list[Aluno]
+   - cursos: list[Curso]
+   - matriculas: list[Matricula]
+   + cadastrar_aluno(nome, email) -> Aluno
+   + cadastrar_curso(nome, vagas) -> Curso
+   + matricular(aluno_id, curso_id) -> Matricula
+   + buscar_aluno(id) -> Aluno | None
+   + buscar_curso(id) -> Curso | None
+
+
+----------------------------------------------------------------
+3. ESTRUTURA DE ARMAZENAMENTO
+----------------------------------------------------------------
+
+Armazenamento em memoria, atraves de tres listas dentro
+da classe Sistema:
+
+   alunos      -> list[Aluno]
+   cursos      -> list[Curso]
+   matriculas  -> list[Matricula]
+
+IDs gerados de forma incremental (contador interno por entidade).
+
+
+----------------------------------------------------------------
+4. MENU EM CONSOLE (PROTOTIPO)
+----------------------------------------------------------------
+
+==========================================
+   SISTEMA DE MATRICULAS - ESCOLA DE IDIOMAS
+==========================================
+   1) Cadastrar aluno           (US01)
+   2) Cadastrar curso           (US02)
+   3) Matricular aluno em curso (US03)
+   0) Sair
+------------------------------------------
+Escolha uma opcao: _
+
+
+Fluxos por opcao:
+
+   [1] Cadastrar aluno (US01)
+       - Solicita: nome, e-mail
+       - Valida: nome nao pode ser vazio
+       - Acao: cria Aluno e adiciona em alunos
+       - Saida: "Aluno cadastrado com sucesso. ID = X"
+
+   [2] Cadastrar curso (US02)
+       - Solicita: nome do curso, quantidade de vagas
+       - Valida: vagas deve ser inteiro > 0
+       - Acao: cria Curso e adiciona em cursos
+       - Saida: "Curso cadastrado com sucesso. ID = X"
+
+   [3] Matricular aluno em curso (US03)
+       - Solicita: ID do aluno, ID do curso
+       - Valida: aluno e curso devem existir
+       - Acao: cria Matricula e adiciona em matriculas
+       - Saida: "Matricula registrada. ID = X"
+
+   [0] Sair
+       - Encerra o programa.
+
+
+----------------------------------------------------------------
+5. FLUXO BASICO DE USO
+----------------------------------------------------------------
+
+   1. Usuario abre o sistema -> menu aparece.
+   2. Cadastra um ou mais alunos (opcao 1).
+   3. Cadastra um ou mais cursos (opcao 2).
+   4. Realiza matricula informando IDs (opcao 3).
+   5. Repete ate optar por sair.
+
+
+----------------------------------------------------------------
+6. VALIDACOES MINIMAS NESTA ITERACAO
+----------------------------------------------------------------
+
+   US01: nome do aluno nao pode ser vazio.
+   US02: vagas do curso deve ser inteiro maior que zero.
+   US03: aluno e curso devem existir antes da matricula.
+
+Validacoes adiadas (proximas iteracoes):
+   - Unicidade de e-mail.
+   - Duplicidade de matricula (mesmo aluno no mesmo curso).
+   - Controle de vagas disponiveis.
+   - Busca por nome.
+   - Listagem de matriculas (US04).
+
+
+----------------------------------------------------------------
+7. ORGANIZACAO DOS ARQUIVOS (SUGESTAO)
+----------------------------------------------------------------
+
+   matriculas/
+      aluno.py        -> classe Aluno
+      curso.py        -> classe Curso
+      matricula.py    -> classe Matricula
+      sistema.py      -> classe Sistema (regras)
+      menu.py         -> laco do menu em console
+      main.py         -> ponto de entrada
+      tests/
+         test_sistema.py
+
+
+----------------------------------------------------------------
+8. PRATICAS XP APLICADAS NESTA ETAPA
+----------------------------------------------------------------
+
+   - Simplicidade: estrutura minima (listas em memoria,
+     sem banco, sem framework).
+   - Design Simples: apenas as classes necessarias para
+     atender US01, US02 e US03.
+   - Pequenas Releases: solucao executavel ja na primeira
+     iteracao, pronta para demo ao cliente.
+   - Coragem para refatorar: estrutura propositalmente
+     simples para facilitar mudanca quando novas estorias
+     (US04, validacoes, busca) forem incorporadas.
+
+================================================================
+FIM - ETAPA 2
+================================================================
