@@ -1,6 +1,7 @@
 package br.com.escola.matriculas.servico;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import br.com.escola.matriculas.modelo.Aluno;
@@ -68,5 +69,27 @@ public class Sistema {
             }
         }
         return null;
+    }
+
+    public List<Aluno> listarAlunos() {
+        return Collections.unmodifiableList(alunos);
+    }
+
+    public List<Curso> listarCursos() {
+        return Collections.unmodifiableList(cursos);
+    }
+
+    public List<Aluno> listarAlunosDoCurso(int cursoId) {
+        Curso curso = buscarCurso(cursoId);
+        if (curso == null) {
+            throw new IllegalArgumentException("Curso nao encontrado: id=" + cursoId);
+        }
+        List<Aluno> resultado = new ArrayList<>();
+        for (Matricula m : matriculas) {
+            if (m.getCurso().getId() == cursoId) {
+                resultado.add(m.getAluno());
+            }
+        }
+        return resultado;
     }
 }

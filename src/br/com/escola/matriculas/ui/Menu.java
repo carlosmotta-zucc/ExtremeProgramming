@@ -1,5 +1,6 @@
 package br.com.escola.matriculas.ui;
 
+import java.util.List;
 import java.util.Scanner;
 
 import br.com.escola.matriculas.modelo.Aluno;
@@ -33,6 +34,9 @@ public class Menu {
                 case 3:
                     matricular();
                     break;
+                case 4:
+                    listar();
+                    break;
                 case 0:
                     System.out.println("Encerrando...");
                     break;
@@ -50,6 +54,7 @@ public class Menu {
         System.out.println("  1) Cadastrar aluno");
         System.out.println("  2) Cadastrar curso");
         System.out.println("  3) Matricular aluno em curso");
+        System.out.println("  4) Listar");
         System.out.println("  0) Sair");
         System.out.println("------------------------------------------");
     }
@@ -85,6 +90,72 @@ public class Menu {
         try {
             Matricula matricula = sistema.matricular(alunoId, cursoId);
             System.out.println("Matricula registrada. ID = " + matricula.getId());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private void listar() {
+        System.out.println("--- LISTAR ---");
+        System.out.println("  1) Todos os alunos");
+        System.out.println("  2) Todos os cursos");
+        System.out.println("  3) Alunos matriculados em um curso");
+        System.out.println("  0) Voltar");
+        int op = lerInteiro("Escolha: ");
+        System.out.println();
+        switch (op) {
+            case 1:
+                listarTodosAlunos();
+                break;
+            case 2:
+                listarTodosCursos();
+                break;
+            case 3:
+                listarAlunosDoCurso();
+                break;
+            case 0:
+                break;
+            default:
+                System.out.println("Opcao invalida.");
+        }
+    }
+
+    private void listarTodosAlunos() {
+        List<Aluno> alunos = sistema.listarAlunos();
+        if (alunos.isEmpty()) {
+            System.out.println("Nenhum aluno cadastrado.");
+            return;
+        }
+        System.out.println("Alunos cadastrados:");
+        for (Aluno a : alunos) {
+            System.out.println("  - " + a);
+        }
+    }
+
+    private void listarTodosCursos() {
+        List<Curso> cursos = sistema.listarCursos();
+        if (cursos.isEmpty()) {
+            System.out.println("Nenhum curso cadastrado.");
+            return;
+        }
+        System.out.println("Cursos cadastrados:");
+        for (Curso c : cursos) {
+            System.out.println("  - " + c);
+        }
+    }
+
+    private void listarAlunosDoCurso() {
+        int cursoId = lerInteiro("ID do curso: ");
+        try {
+            List<Aluno> alunos = sistema.listarAlunosDoCurso(cursoId);
+            if (alunos.isEmpty()) {
+                System.out.println("Nenhum aluno matriculado neste curso.");
+                return;
+            }
+            System.out.println("Alunos matriculados:");
+            for (Aluno a : alunos) {
+                System.out.println("  - " + a);
+            }
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }

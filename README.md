@@ -19,33 +19,21 @@ src/
      modelo/   -> Aluno, Curso, Matricula
      servico/  -> Sistema (regras das US)
      ui/       -> Menu (console)
-test/
-  br/com/escola/matriculas/
-     servico/SistemaTest.java
 ```
 
 ## Como rodar
 
-Compilar o codigo principal:
+Compilar:
 
 ```bash
 javac -d bin -sourcepath src src/br/com/escola/matriculas/Main.java
 ```
 
-Executar a aplicacao:
+Executar:
 
 ```bash
 java -cp bin br.com.escola.matriculas.Main
 ```
-
-## Como testar
-
-```bash
-javac -d bin -sourcepath src:test test/br/com/escola/matriculas/servico/SistemaTest.java
-java -cp bin br.com.escola.matriculas.servico.SistemaTest
-```
-
-A saida deve terminar com `0 falha(s)`.
 
 ## Documentacao do processo (XP)
 

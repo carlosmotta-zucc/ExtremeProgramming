@@ -3,7 +3,7 @@ ETAPA 2 - DESENHO DA SOLUCAO (XP)
 Sistema de Gestao de Matriculas - Escola de Idiomas
 Disciplina: 10275 - Engenharia de Software
 Data: 22/05/2026
-Estorias da iteracao 1: US01, US02, US03
+Estorias da iteracao 1: US01, US02, US03, US04
 ================================================================
 
 Principio orientador: "Fazer o mais simples que funcione".
@@ -49,6 +49,9 @@ Sistema (controlador principal)
    + matricular(aluno_id, curso_id) -> Matricula
    + buscar_aluno(id) -> Aluno | None
    + buscar_curso(id) -> Curso | None
+   + listar_alunos() -> list[Aluno]            (US04)
+   + listar_cursos() -> list[Curso]            (US04)
+   + listar_alunos_do_curso(curso_id) -> list[Aluno]  (US04)
 
 
 ----------------------------------------------------------------
@@ -75,9 +78,19 @@ IDs gerados de forma incremental (contador interno por entidade).
    1) Cadastrar aluno           (US01)
    2) Cadastrar curso           (US02)
    3) Matricular aluno em curso (US03)
+   4) Listar                    (US04)
    0) Sair
 ------------------------------------------
 Escolha uma opcao: _
+
+
+Submenu da opcao 4 (Listar):
+
+   --- LISTAR ---
+   1) Todos os alunos
+   2) Todos os cursos
+   3) Alunos matriculados em um curso
+   0) Voltar
 
 
 Fluxos por opcao:
@@ -100,6 +113,20 @@ Fluxos por opcao:
        - Acao: cria Matricula e adiciona em matriculas
        - Saida: "Matricula registrada. ID = X"
 
+   [4] Listar (US04)
+       4.1 Todos os alunos
+           - Acao: percorre lista alunos e imprime cada um.
+           - Lista vazia: "Nenhum aluno cadastrado."
+       4.2 Todos os cursos
+           - Acao: percorre lista cursos e imprime cada um.
+           - Lista vazia: "Nenhum curso cadastrado."
+       4.3 Alunos matriculados em um curso
+           - Solicita: ID do curso.
+           - Valida: curso deve existir.
+           - Acao: filtra matriculas por curso e imprime
+                   o aluno de cada uma.
+           - Lista vazia: "Nenhum aluno matriculado neste curso."
+
    [0] Sair
        - Encerra o programa.
 
@@ -112,7 +139,9 @@ Fluxos por opcao:
    2. Cadastra um ou mais alunos (opcao 1).
    3. Cadastra um ou mais cursos (opcao 2).
    4. Realiza matricula informando IDs (opcao 3).
-   5. Repete ate optar por sair.
+   5. Consulta dados via Listar (opcao 4) sempre que precisar
+      conferir o que foi cadastrado.
+   6. Repete ate optar por sair.
 
 
 ----------------------------------------------------------------
@@ -122,13 +151,14 @@ Fluxos por opcao:
    US01: nome do aluno nao pode ser vazio.
    US02: vagas do curso deve ser inteiro maior que zero.
    US03: aluno e curso devem existir antes da matricula.
+   US04: curso deve existir ao listar alunos de um curso.
 
 Validacoes adiadas (proximas iteracoes):
    - Unicidade de e-mail.
    - Duplicidade de matricula (mesmo aluno no mesmo curso).
    - Controle de vagas disponiveis.
    - Busca por nome.
-   - Listagem de matriculas (US04).
+   - Ordenacao/paginacao das listagens.
 
 
 ----------------------------------------------------------------

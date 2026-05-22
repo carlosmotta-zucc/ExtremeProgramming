@@ -4,7 +4,7 @@ Sistema de Gestao de Matriculas - Escola de Idiomas
 Disciplina: 10275 - Engenharia de Software
 Data: 22/05/2026
 Linguagem: JAVA (Java puro, sem build tool)
-Estorias da iteracao 1: US01, US02, US03
+Estorias da iteracao 1: US01, US02, US03, US04
 ================================================================
 
 Principio orientador (XP): "Fazer o mais simples que funcione".
@@ -19,8 +19,6 @@ Persistencia: EM MEMORIA (listas), sem banco de dados.
    - Linguagem ........: Java 21 (qualquer 17+ funciona).
    - Build ............: javac (compilador padrao do JDK).
    - Execucao .........: java (JRE padrao do JDK).
-   - Testes ...........: classe SistemaTest com main() proprio
-                         e helpers de assercao (sem JUnit).
    - Editor sugerido ..: VSCode (extensao "Extension Pack for Java").
 
 Por que sem build tool?
@@ -50,10 +48,6 @@ ExtremeProgramming/
             Sistema.java                    (regras de negocio)
          ui/
             Menu.java                       (laco do menu console)
-   test/
-      br/com/escola/matriculas/
-         servico/
-            SistemaTest.java                (testes das US01..US03)
    bin/                                     (gerado por javac, ignorado)
 
 
@@ -88,31 +82,33 @@ ExtremeProgramming/
         List<Matricula> matriculas
    - Contadores incrementais para IDs:
         int proximoIdAluno, proximoIdCurso, proximoIdMatricula
-   - Metodos publicos (regras de US01..US03):
+   - Metodos publicos (regras de US01..US04):
         Aluno cadastrarAluno(String nome, String email)
         Curso cadastrarCurso(String nome, int vagas)
         Matricula matricular(int alunoId, int cursoId)
         Aluno buscarAluno(int id)
         Curso buscarCurso(int id)
+        List<Aluno> listarAlunos()                       (US04)
+        List<Curso> listarCursos()                       (US04)
+        List<Aluno> listarAlunosDoCurso(int cursoId)     (US04)
+   - As listagens retornam Collections.unmodifiableList
+     para evitar mutacao externa do estado interno.
    - Lanca IllegalArgumentException em entradas invalidas
      (nome vazio, vagas <= 0, aluno/curso inexistente).
 
 [ ui/Menu.java ]
    - Recebe Sistema no construtor.
    - Usa java.util.Scanner para ler entrada do usuario.
-   - Imprime o menu de 4 opcoes (1, 2, 3, 0).
+   - Imprime o menu de 5 opcoes (1, 2, 3, 4, 0).
+   - A opcao 4 (Listar) abre um submenu com 3 escolhas:
+        1) Todos os alunos
+        2) Todos os cursos
+        3) Alunos matriculados em um curso (pede ID do curso)
+        0) Voltar
    - Para cada opcao, chama o metodo correspondente em
      Sistema e mostra mensagem de sucesso ou erro.
    - Trata IllegalArgumentException exibindo mensagem amigavel.
-
-[ test/.../SistemaTest.java ]
-   - Classe executavel (main proprio) com pequenos
-     helpers de assercao (assertEquals, assertThrows).
-   - Cobre criterios das US01, US02 e US03:
-        - cadastrar aluno valido / nome vazio
-        - cadastrar curso valido / vagas <= 0
-        - matricular com IDs validos / aluno inexistente
-        - matricular com curso inexistente
+   - Mostra mensagem clara quando uma listagem volta vazia.
 
 
 ----------------------------------------------------------------
@@ -147,43 +143,40 @@ ExtremeProgramming/
 5. COMANDOS DE USO
 ----------------------------------------------------------------
 
-   Compilar (codigo principal):
+   Compilar:
       javac -d bin -sourcepath src \
             src/br/com/escola/matriculas/Main.java
 
    Rodar a aplicacao:
       java -cp bin br.com.escola.matriculas.Main
 
-   Compilar e rodar os testes:
-      javac -d bin -sourcepath src:test \
-            test/br/com/escola/matriculas/servico/SistemaTest.java
-      java -cp bin br.com.escola.matriculas.servico.SistemaTest
-
 
 ----------------------------------------------------------------
-6. ORDEM DE IMPLEMENTACAO (TDD-LIGHT, ESTILO XP)
+6. ORDEM DE IMPLEMENTACAO (ESTILO XP)
 ----------------------------------------------------------------
 
-A ordem segue a dependencia entre as estorias (US01 -> US02 ->
-US03), e dentro de cada estoria escrevemos teste -> codigo
-minimo -> refatorar.
+A ordem segue a dependencia entre as estorias
+(US01 -> US02 -> US03 -> US04), e a validacao de cada
+estoria e feita manualmente pelo cliente atraves do
+menu, em pequenas releases.
 
-   1) Criar estrutura de pastas (src/, test/, bin/).
+   1) Criar estrutura de pastas (src/, bin/).
    2) US01 - Cadastrar Aluno:
-         a) escrever teste cadastrarAlunoValido()
-         b) criar Aluno.java
-         c) implementar Sistema.cadastrarAluno()
-         d) escrever teste para nome vazio
-         e) tratar validacao
-   3) US02 - Cadastrar Curso (mesma sequencia).
+         a) criar Aluno.java
+         b) implementar Sistema.cadastrarAluno()
+         c) tratar validacao de nome vazio
+   3) US02 - Cadastrar Curso (mesma sequencia, validar vagas > 0).
    4) US03 - Matricular:
-         a) testes de matricula valida e dos dois erros
-         b) criar Matricula.java
-         c) implementar Sistema.matricular() usando
+         a) criar Matricula.java
+         b) implementar Sistema.matricular() usando
             buscarAluno() e buscarCurso()
-   5) Criar Menu.java (camada de console).
-   6) Criar Main.java (ligacao final).
-   7) Teste manual ponta-a-ponta + demo ao cliente.
+   5) US04 - Listar:
+         a) implementar listarAlunos / listarCursos
+         b) implementar listarAlunosDoCurso (com validacao
+            de curso inexistente)
+   6) Criar Menu.java (camada de console, menu + submenu).
+   7) Criar Main.java (ligacao final).
+   8) Demo manual ponta-a-ponta com o cliente.
 
 
 ----------------------------------------------------------------
@@ -191,11 +184,11 @@ minimo -> refatorar.
 ----------------------------------------------------------------
 
    [ ] Codigo compila sem warning relevante.
-   [ ] SistemaTest exibe "0 falha(s)" ao rodar.
-   [ ] Menu executa as 3 opcoes sem quebrar.
-   [ ] Cada US tem ao menos 1 teste do caminho feliz e
-       1 teste de validacao.
-   [ ] README explica como rodar e como testar.
+   [ ] Menu executa as 4 opcoes (1, 2, 3, 4) sem quebrar.
+   [ ] Submenu de Listar executa as 3 sub-opcoes sem quebrar.
+   [ ] Cada criterio de aceitacao das US01..US04 foi
+       validado manualmente com o cliente.
+   [ ] README explica como rodar.
    [ ] Commit no Git ao final de cada US concluida.
 
 
@@ -208,8 +201,9 @@ minimo -> refatorar.
    - Unicidade de e-mail.
    - Controle de vagas disponiveis.
    - Duplicidade de matricula.
-   - Listagem de matriculas (US04).
-   - Frameworks de teste (JUnit, etc.).
+   - Ordenacao e paginacao das listagens.
+   - Busca de aluno por nome.
+   - Testes automatizados (sera avaliado em iteracoes futuras).
    - Empacotamento como instalador.
 
 Esses itens entram quando o cliente pedir, em iteracoes
@@ -222,16 +216,14 @@ futuras, conforme o principio de Pequenas Releases.
 
    - Simplicidade: Java puro, listas em memoria, console,
      zero dependencias externas.
-   - Testes Automatizados: SistemaTest cobre as US com
-     assercoes proprias, executado com 'java'.
    - Pequenas Releases: ao final da iteracao ja existe
      binario rodavel para demo.
    - Refatoracao: estrutura em pacotes (modelo, servico,
      ui) preparada para crescer sem reescrita.
    - Padrao de Codigo: convencao Java padrao (camelCase
      em metodos/variaveis, PascalCase em classes).
-   - Integracao Continua (manual nesta etapa): rodar
-     SistemaTest antes de cada commit.
+   - Cliente Presente: validacao das US e feedback feitos
+     diretamente com o cliente ao final de cada iteracao.
 
 ================================================================
 FIM - ETAPA 3

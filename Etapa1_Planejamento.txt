@@ -35,6 +35,19 @@ US03 - Matricular Aluno em Curso
      - So e possivel matricular em curso ja cadastrado.
      - A matricula deve ficar registrada no sistema.
 
+US04 - Listar Dados do Sistema
+   "Como atendente, quero listar alunos, cursos e os alunos
+    matriculados em um curso especifico para visualizar o estado
+    atual do sistema."
+   Criterios de Aceitacao:
+     - O sistema deve permitir listar TODOS os alunos cadastrados.
+     - O sistema deve permitir listar TODOS os cursos cadastrados.
+     - Dado um ID de curso, o sistema deve listar todos os alunos
+       matriculados nesse curso.
+     - Se o ID de curso informado nao existir, o sistema deve
+       informar erro claramente.
+     - Listas vazias devem ser informadas ao usuario (sem erro).
+
 
 ----------------------------------------------------------------
 2. DUVIDAS DISCUTIDAS COM O CLIENTE
@@ -54,8 +67,9 @@ Escala adotada (Story Points - sequencia simplificada):
 | US01   | Cadastrar Aluno              |   2    | Simples  |
 | US02   | Cadastrar Curso              |   2    | Simples  |
 | US03   | Matricular Aluno em Curso    |   3    | Media    |
+| US04   | Listar Dados do Sistema      |   2    | Simples  |
 +--------+------------------------------+--------+----------+
-| TOTAL DA ITERACAO                     |   7    |          |
+| TOTAL DA ITERACAO                     |   9    |          |
 +---------------------------------------+--------+----------+
 
 Justificativa das estimativas:
@@ -65,6 +79,9 @@ Justificativa das estimativas:
    - US03 (3 pts): depende de US01 e US02; envolve duas
      verificacoes de existencia e criacao de relacionamento
      entre entidades.
+   - US04 (2 pts): consulta sobre estruturas ja existentes
+     (listas de alunos, cursos e matriculas); inclui 1 caso
+     de validacao (curso inexistente) e 1 submenu no console.
 
 
 ----------------------------------------------------------------
@@ -76,20 +93,24 @@ Selecionadas para a iteracao 1 (1 semana):
    [X] US01 - Cadastrar Aluno
    [X] US02 - Cadastrar Curso
    [X] US03 - Matricular Aluno em Curso
+   [X] US04 - Listar Dados do Sistema
 
-Total estimado: 7 pontos
+Total estimado: 9 pontos
 
 Ordem de implementacao (com base na dependencia):
-   1) US01 - Cadastrar Aluno   (pre-requisito de US03)
-   2) US02 - Cadastrar Curso   (pre-requisito de US03)
+   1) US01 - Cadastrar Aluno   (pre-requisito de US03 e US04)
+   2) US02 - Cadastrar Curso   (pre-requisito de US03 e US04)
    3) US03 - Matricular Aluno em Curso
+   4) US04 - Listar Dados do Sistema (depende de US01..US03)
 
 Motivacao da priorizacao (cliente):
-   Estas tres estorias entregam o fluxo minimo de valor:
-   sem aluno e sem curso nao ha matricula. Sao a base do
-   sistema e permitem demonstrar funcionalidade end-to-end
-   ja na primeira release curta, alinhado ao principio XP
-   de "fazer o mais simples que funcione".
+   US01..US03 entregam o fluxo minimo de valor (sem aluno e
+   sem curso nao ha matricula). US04 foi incorporada na mesma
+   iteracao apos pedido do cliente: sem listagem nao e possivel
+   conferir visualmente o que foi cadastrado nem auditar quem
+   esta matriculado em cada curso. Mantem o principio XP de
+   "fazer o mais simples que funcione" e habilita a demo
+   completa ao final da iteracao.
 
 
 ----------------------------------------------------------------
