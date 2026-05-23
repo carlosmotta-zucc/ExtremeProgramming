@@ -94,7 +94,8 @@ ExtremeProgramming/
    - As listagens retornam Collections.unmodifiableList
      para evitar mutacao externa do estado interno.
    - Lanca IllegalArgumentException em entradas invalidas
-     (nome vazio, vagas <= 0, aluno/curso inexistente).
+     (nome vazio, vagas <= 0, aluno/curso inexistente,
+     curso sem vagas disponiveis no momento da matricula).
 
 [ ui/Menu.java ]
    - Recebe Sistema no construtor.
@@ -199,7 +200,6 @@ menu, em pequenas releases.
    - Banco de dados (H2, MySQL, etc.).
    - Interface grafica ou web.
    - Unicidade de e-mail.
-   - Controle de vagas disponiveis.
    - Duplicidade de matricula.
    - Ordenacao e paginacao das listagens.
    - Busca de aluno por nome.

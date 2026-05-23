@@ -34,6 +34,9 @@ US03 - Matricular Aluno em Curso
      - So e possivel matricular um aluno ja cadastrado.
      - So e possivel matricular em curso ja cadastrado.
      - A matricula deve ficar registrada no sistema.
+     - Nao deve ser possivel matricular se o curso ja estiver
+       com todas as vagas ocupadas. O sistema deve informar
+       o nome do curso e a quantidade de vagas/matriculados.
 
 US04 - Listar Dados do Sistema
    "Como atendente, quero listar alunos, cursos e os alunos

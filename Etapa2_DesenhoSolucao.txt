@@ -110,8 +110,10 @@ Fluxos por opcao:
    [3] Matricular aluno em curso (US03)
        - Solicita: ID do aluno, ID do curso
        - Valida: aluno e curso devem existir
+                 + curso nao pode estar com todas as vagas ocupadas
        - Acao: cria Matricula e adiciona em matriculas
        - Saida: "Matricula registrada. ID = X"
+       - Erro: "Curso 'X' sem vagas disponiveis (vagas=N, matriculados=N)."
 
    [4] Listar (US04)
        4.1 Todos os alunos
@@ -151,12 +153,12 @@ Fluxos por opcao:
    US01: nome do aluno nao pode ser vazio.
    US02: vagas do curso deve ser inteiro maior que zero.
    US03: aluno e curso devem existir antes da matricula.
+         curso nao pode estar com todas as vagas ocupadas.
    US04: curso deve existir ao listar alunos de um curso.
 
 Validacoes adiadas (proximas iteracoes):
    - Unicidade de e-mail.
    - Duplicidade de matricula (mesmo aluno no mesmo curso).
-   - Controle de vagas disponiveis.
    - Busca por nome.
    - Ordenacao/paginacao das listagens.
 

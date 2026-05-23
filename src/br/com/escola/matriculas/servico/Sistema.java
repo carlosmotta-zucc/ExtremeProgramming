@@ -48,6 +48,18 @@ public class Sistema {
         if (curso == null) {
             throw new IllegalArgumentException("Curso nao encontrado: id=" + cursoId);
         }
+        int matriculadosNoCurso = 0;
+        for (Matricula m : matriculas) {
+            if (m.getCurso().getId() == cursoId) {
+                matriculadosNoCurso++;
+            }
+        }
+        if (matriculadosNoCurso >= curso.getVagas()) {
+            throw new IllegalArgumentException(
+                    "Curso '" + curso.getNome() + "' sem vagas disponiveis"
+                            + " (vagas=" + curso.getVagas()
+                            + ", matriculados=" + matriculadosNoCurso + ").");
+        }
         Matricula matricula = new Matricula(proximoIdMatricula++, aluno, curso);
         matriculas.add(matricula);
         return matricula;
