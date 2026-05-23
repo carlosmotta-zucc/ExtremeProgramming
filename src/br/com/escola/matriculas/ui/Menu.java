@@ -52,8 +52,19 @@ public class Menu {
     }
 
     private void limparTela() {
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        try {
+            String so = System.getProperty("os.name").toLowerCase();
+            if (so.contains("windows")) {
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            } else {
+                System.out.print("\033[H\033[2J");
+                System.out.flush();
+            }
+        } catch (Exception e) {
+            for (int i = 0; i < 50; i++) {
+                System.out.println();
+            }
+        }
     }
 
     private void pausar() {
