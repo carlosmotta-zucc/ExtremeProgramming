@@ -3,7 +3,7 @@ ETAPA 2 - DESENHO DA SOLUCAO (XP)
 Sistema de Gestao de Matriculas - Escola de Idiomas
 Disciplina: 10275 - Engenharia de Software
 Data: 22/05/2026
-Estorias da iteracao 1: US01, US02, US03, US04
+Estorias da iteracao 1: US01, US02, US03, US04, US05
 ================================================================
 
 Principio orientador: "Fazer o mais simples que funcione".
@@ -47,6 +47,7 @@ Sistema (controlador principal)
    + cadastrar_aluno(nome, email) -> Aluno
    + cadastrar_curso(nome, vagas) -> Curso
    + matricular(aluno_id, curso_id) -> Matricula
+   + cancelar_matricula(aluno_id, curso_id) -> None   (US05)
    + buscar_aluno(id) -> Aluno | None
    + buscar_curso(id) -> Curso | None
    + listar_alunos() -> list[Aluno]            (US04)
@@ -79,6 +80,7 @@ IDs gerados de forma incremental (contador interno por entidade).
    2) Cadastrar curso           (US02)
    3) Matricular aluno em curso (US03)
    4) Listar                    (US04)
+   5) Cancelar matricula        (US05)
    0) Sair
 ------------------------------------------
 Escolha uma opcao: _
@@ -110,10 +112,13 @@ Fluxos por opcao:
    [3] Matricular aluno em curso (US03)
        - Solicita: ID do aluno, ID do curso
        - Valida: aluno e curso devem existir
+                 + aluno ainda nao matriculado nesse curso (sem duplicidade)
                  + curso nao pode estar com todas as vagas ocupadas
        - Acao: cria Matricula e adiciona em matriculas
        - Saida: "Matricula registrada. ID = X"
-       - Erro: "Curso 'X' sem vagas disponiveis (vagas=N, matriculados=N)."
+       - Erros possiveis:
+            "Aluno 'X' ja esta matriculado no curso 'Y'."
+            "Curso 'Y' sem vagas disponiveis (vagas=N, matriculados=N)."
 
    [4] Listar (US04)
        4.1 Todos os alunos
@@ -129,6 +134,15 @@ Fluxos por opcao:
                    o aluno de cada uma.
            - Lista vazia: "Nenhum aluno matriculado neste curso."
 
+   [5] Cancelar matricula (US05)
+       - Solicita: ID do aluno, ID do curso
+       - Valida: deve existir uma matricula para esse par
+                 aluno/curso
+       - Acao: remove a matricula da lista matriculas
+               (libera vaga no curso)
+       - Saida: "Matricula cancelada com sucesso."
+       - Erro: "Matricula nao encontrada para aluno id=X no curso id=Y."
+
    [0] Sair
        - Encerra o programa.
 
@@ -143,7 +157,8 @@ Fluxos por opcao:
    4. Realiza matricula informando IDs (opcao 3).
    5. Consulta dados via Listar (opcao 4) sempre que precisar
       conferir o que foi cadastrado.
-   6. Repete ate optar por sair.
+   6. Se precisar desfazer uma matricula, usa Cancelar (opcao 5).
+   7. Repete ate optar por sair.
 
 
 ----------------------------------------------------------------
@@ -154,11 +169,14 @@ Fluxos por opcao:
    US02: vagas do curso deve ser inteiro maior que zero.
    US03: aluno e curso devem existir antes da matricula.
          curso nao pode estar com todas as vagas ocupadas.
+         mesmo aluno nao pode ser matriculado duas vezes no
+         mesmo curso (sem duplicidade).
    US04: curso deve existir ao listar alunos de um curso.
+   US05: deve existir uma matricula correspondente ao par
+         aluno/curso informado para o cancelamento.
 
 Validacoes adiadas (proximas iteracoes):
    - Unicidade de e-mail.
-   - Duplicidade de matricula (mesmo aluno no mesmo curso).
    - Busca por nome.
    - Ordenacao/paginacao das listagens.
 

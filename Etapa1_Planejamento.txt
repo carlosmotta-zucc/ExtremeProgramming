@@ -37,6 +37,9 @@ US03 - Matricular Aluno em Curso
      - Nao deve ser possivel matricular se o curso ja estiver
        com todas as vagas ocupadas. O sistema deve informar
        o nome do curso e a quantidade de vagas/matriculados.
+     - Nao deve ser possivel matricular o mesmo aluno no mesmo
+       curso mais de uma vez. O sistema deve informar o nome
+       do aluno e o nome do curso.
 
 US04 - Listar Dados do Sistema
    "Como atendente, quero listar alunos, cursos e os alunos
@@ -50,6 +53,19 @@ US04 - Listar Dados do Sistema
      - Se o ID de curso informado nao existir, o sistema deve
        informar erro claramente.
      - Listas vazias devem ser informadas ao usuario (sem erro).
+
+US05 - Cancelar Matricula
+   "Como atendente, quero cancelar a matricula de um aluno em
+    um curso para liberar a vaga e remover a inscricao."
+   Criterios de Aceitacao:
+     - O sistema deve permitir cancelar uma matricula informando
+       o ID do aluno e o ID do curso.
+     - Apos o cancelamento, a matricula deixa de existir no
+       sistema (nao aparece mais em listagens).
+     - A vaga ocupada por essa matricula volta a ficar disponivel
+       para novas matriculas no mesmo curso.
+     - Se nao existir matricula para esse par aluno/curso, o
+       sistema deve informar erro claramente.
 
 
 ----------------------------------------------------------------
@@ -71,8 +87,9 @@ Escala adotada (Story Points - sequencia simplificada):
 | US02   | Cadastrar Curso              |   2    | Simples  |
 | US03   | Matricular Aluno em Curso    |   3    | Media    |
 | US04   | Listar Dados do Sistema      |   2    | Simples  |
+| US05   | Cancelar Matricula           |   2    | Simples  |
 +--------+------------------------------+--------+----------+
-| TOTAL DA ITERACAO                     |   9    |          |
+| TOTAL DA ITERACAO                     |  11    |          |
 +---------------------------------------+--------+----------+
 
 Justificativa das estimativas:
@@ -81,10 +98,14 @@ Justificativa das estimativas:
      Mesmo nivel de US01.
    - US03 (3 pts): depende de US01 e US02; envolve duas
      verificacoes de existencia e criacao de relacionamento
-     entre entidades.
+     entre entidades, alem das validacoes de vagas e de
+     duplicidade.
    - US04 (2 pts): consulta sobre estruturas ja existentes
      (listas de alunos, cursos e matriculas); inclui 1 caso
      de validacao (curso inexistente) e 1 submenu no console.
+   - US05 (2 pts): remocao de elemento da lista de matriculas
+     com 1 validacao (matricula inexistente); reutiliza a
+     identificacao por par aluno/curso ja usada em US03.
 
 
 ----------------------------------------------------------------
@@ -97,22 +118,27 @@ Selecionadas para a iteracao 1 (1 semana):
    [X] US02 - Cadastrar Curso
    [X] US03 - Matricular Aluno em Curso
    [X] US04 - Listar Dados do Sistema
+   [X] US05 - Cancelar Matricula
 
-Total estimado: 9 pontos
+Total estimado: 11 pontos
 
 Ordem de implementacao (com base na dependencia):
-   1) US01 - Cadastrar Aluno   (pre-requisito de US03 e US04)
-   2) US02 - Cadastrar Curso   (pre-requisito de US03 e US04)
+   1) US01 - Cadastrar Aluno   (pre-requisito de US03..US05)
+   2) US02 - Cadastrar Curso   (pre-requisito de US03..US05)
    3) US03 - Matricular Aluno em Curso
    4) US04 - Listar Dados do Sistema (depende de US01..US03)
+   5) US05 - Cancelar Matricula (depende de US03)
 
 Motivacao da priorizacao (cliente):
    US01..US03 entregam o fluxo minimo de valor (sem aluno e
    sem curso nao ha matricula). US04 foi incorporada na mesma
    iteracao apos pedido do cliente: sem listagem nao e possivel
    conferir visualmente o que foi cadastrado nem auditar quem
-   esta matriculado em cada curso. Mantem o principio XP de
-   "fazer o mais simples que funcione" e habilita a demo
+   esta matriculado em cada curso. US05 foi incorporada na
+   sequencia da revisao com o cliente, junto com as validacoes
+   de vagas e duplicidade da US03, para fechar o ciclo de vida
+   da matricula (criar/listar/cancelar). Mantem o principio XP
+   de "fazer o mais simples que funcione" e habilita a demo
    completa ao final da iteracao.
 
 

@@ -48,21 +48,52 @@ public class Sistema {
         if (curso == null) {
             throw new IllegalArgumentException("Curso nao encontrado: id=" + cursoId);
         }
-        int matriculadosNoCurso = 0;
-        for (Matricula m : matriculas) {
-            if (m.getCurso().getId() == cursoId) {
-                matriculadosNoCurso++;
-            }
-        }
-        if (matriculadosNoCurso >= curso.getVagas()) {
-            throw new IllegalArgumentException(
-                    "Curso '" + curso.getNome() + "' sem vagas disponiveis"
-                            + " (vagas=" + curso.getVagas()
-                            + ", matriculados=" + matriculadosNoCurso + ").");
-        }
+        validarMatriculaUnica(aluno, curso);
+        validarVagasDisponiveis(curso);
         Matricula matricula = new Matricula(proximoIdMatricula++, aluno, curso);
         matriculas.add(matricula);
         return matricula;
+    }
+
+    public void cancelarMatricula(int alunoId, int cursoId) {
+        boolean removida = matriculas.removeIf(m ->
+                m.getAluno().getId() == alunoId && m.getCurso().getId() == cursoId);
+        if (!removida) {
+            throw new IllegalArgumentException(
+                    "Matricula nao encontrada para aluno id=" + alunoId
+                            + " no curso id=" + cursoId + ".");
+        }
+    }
+
+    private void validarMatriculaUnica(Aluno aluno, Curso curso) {
+        for (Matricula m : matriculas) {
+            if (m.getAluno().getId() == aluno.getId()
+                    && m.getCurso().getId() == curso.getId()) {
+                throw new IllegalArgumentException(
+                        "Aluno '" + aluno.getNome() + "' ja esta matriculado"
+                                + " no curso '" + curso.getNome() + "'.");
+            }
+        }
+    }
+
+    private void validarVagasDisponiveis(Curso curso) {
+        int matriculados = contarMatriculasDoCurso(curso.getId());
+        if (matriculados >= curso.getVagas()) {
+            throw new IllegalArgumentException(
+                    "Curso '" + curso.getNome() + "' sem vagas disponiveis"
+                            + " (vagas=" + curso.getVagas()
+                            + ", matriculados=" + matriculados + ").");
+        }
+    }
+
+    private int contarMatriculasDoCurso(int cursoId) {
+        int total = 0;
+        for (Matricula m : matriculas) {
+            if (m.getCurso().getId() == cursoId) {
+                total++;
+            }
+        }
+        return total;
     }
 
     public Aluno buscarAluno(int id) {

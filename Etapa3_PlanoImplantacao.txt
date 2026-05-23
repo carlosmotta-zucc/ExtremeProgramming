@@ -4,7 +4,7 @@ Sistema de Gestao de Matriculas - Escola de Idiomas
 Disciplina: 10275 - Engenharia de Software
 Data: 22/05/2026
 Linguagem: JAVA (Java puro, sem build tool)
-Estorias da iteracao 1: US01, US02, US03, US04
+Estorias da iteracao 1: US01, US02, US03, US04, US05
 ================================================================
 
 Principio orientador (XP): "Fazer o mais simples que funcione".
@@ -82,30 +82,45 @@ ExtremeProgramming/
         List<Matricula> matriculas
    - Contadores incrementais para IDs:
         int proximoIdAluno, proximoIdCurso, proximoIdMatricula
-   - Metodos publicos (regras de US01..US04):
+   - Metodos publicos (regras de US01..US05):
         Aluno cadastrarAluno(String nome, String email)
         Curso cadastrarCurso(String nome, int vagas)
         Matricula matricular(int alunoId, int cursoId)
+        void cancelarMatricula(int alunoId, int cursoId) (US05)
         Aluno buscarAluno(int id)
         Curso buscarCurso(int id)
         List<Aluno> listarAlunos()                       (US04)
         List<Curso> listarCursos()                       (US04)
         List<Aluno> listarAlunosDoCurso(int cursoId)     (US04)
+   - Helpers privados extraidos para manter matricular()
+     legivel: validarMatriculaUnica(), validarVagasDisponiveis(),
+     contarMatriculasDoCurso().
    - As listagens retornam Collections.unmodifiableList
      para evitar mutacao externa do estado interno.
-   - Lanca IllegalArgumentException em entradas invalidas
-     (nome vazio, vagas <= 0, aluno/curso inexistente,
-     curso sem vagas disponiveis no momento da matricula).
+   - Lanca IllegalArgumentException em entradas invalidas:
+        - nome vazio (US01)
+        - vagas <= 0 (US02)
+        - aluno/curso inexistente (US03)
+        - aluno ja matriculado no curso (US03)
+        - curso sem vagas disponiveis (US03)
+        - curso inexistente em listarAlunosDoCurso (US04)
+        - matricula inexistente em cancelarMatricula (US05)
 
 [ ui/Menu.java ]
    - Recebe Sistema no construtor.
    - Usa java.util.Scanner para ler entrada do usuario.
-   - Imprime o menu de 5 opcoes (1, 2, 3, 4, 0).
+   - Imprime o menu de 6 opcoes (1, 2, 3, 4, 5, 0).
    - A opcao 4 (Listar) abre um submenu com 3 escolhas:
         1) Todos os alunos
         2) Todos os cursos
         3) Alunos matriculados em um curso (pede ID do curso)
         0) Voltar
+   - A opcao 5 (Cancelar matricula) solicita ID do aluno e
+     ID do curso e chama sistema.cancelarMatricula().
+   - Antes de cada acao a tela e limpa (ANSI em Linux/Mac
+     e 'cmd /c cls' em Windows), e ao final exibe
+     "Pressione Enter para continuar..." para o usuario
+     ler o resultado.
    - Para cada opcao, chama o metodo correspondente em
      Sistema e mostra mensagem de sucesso ou erro.
    - Trata IllegalArgumentException exibindo mensagem amigavel.
@@ -175,9 +190,13 @@ menu, em pequenas releases.
          a) implementar listarAlunos / listarCursos
          b) implementar listarAlunosDoCurso (com validacao
             de curso inexistente)
-   6) Criar Menu.java (camada de console, menu + submenu).
-   7) Criar Main.java (ligacao final).
-   8) Demo manual ponta-a-ponta com o cliente.
+   6) US05 - Cancelar matricula:
+         a) implementar Sistema.cancelarMatricula() usando
+            removeIf por par aluno/curso
+         b) validar matricula inexistente
+   7) Criar Menu.java (camada de console, menu + submenu).
+   8) Criar Main.java (ligacao final).
+   9) Demo manual ponta-a-ponta com o cliente.
 
 
 ----------------------------------------------------------------
@@ -185,9 +204,9 @@ menu, em pequenas releases.
 ----------------------------------------------------------------
 
    [ ] Codigo compila sem warning relevante.
-   [ ] Menu executa as 4 opcoes (1, 2, 3, 4) sem quebrar.
+   [ ] Menu executa as 5 opcoes (1, 2, 3, 4, 5) sem quebrar.
    [ ] Submenu de Listar executa as 3 sub-opcoes sem quebrar.
-   [ ] Cada criterio de aceitacao das US01..US04 foi
+   [ ] Cada criterio de aceitacao das US01..US05 foi
        validado manualmente com o cliente.
    [ ] README explica como rodar.
    [ ] Commit no Git ao final de cada US concluida.
@@ -200,7 +219,6 @@ menu, em pequenas releases.
    - Banco de dados (H2, MySQL, etc.).
    - Interface grafica ou web.
    - Unicidade de e-mail.
-   - Duplicidade de matricula.
    - Ordenacao e paginacao das listagens.
    - Busca de aluno por nome.
    - Testes automatizados (sera avaliado em iteracoes futuras).

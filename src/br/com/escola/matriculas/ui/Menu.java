@@ -41,6 +41,10 @@ public class Menu {
                 case 4:
                     listar();
                     break;
+                case 5:
+                    cancelarMatricula();
+                    pausar();
+                    break;
                 case 0:
                     System.out.println("Encerrando...");
                     break;
@@ -81,6 +85,7 @@ public class Menu {
         System.out.println("  2) Cadastrar curso");
         System.out.println("  3) Matricular aluno em curso");
         System.out.println("  4) Listar");
+        System.out.println("  5) Cancelar matricula");
         System.out.println("  0) Sair");
         System.out.println("------------------------------------------");
     }
@@ -116,6 +121,17 @@ public class Menu {
         try {
             Matricula matricula = sistema.matricular(alunoId, cursoId);
             System.out.println("Matricula registrada. ID = " + matricula.getId());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Erro: " + e.getMessage());
+        }
+    }
+
+    private void cancelarMatricula() {
+        int alunoId = lerInteiro("ID do aluno: ");
+        int cursoId = lerInteiro("ID do curso: ");
+        try {
+            sistema.cancelarMatricula(alunoId, cursoId);
+            System.out.println("Matricula cancelada com sucesso.");
         } catch (IllegalArgumentException e) {
             System.out.println("Erro: " + e.getMessage());
         }
