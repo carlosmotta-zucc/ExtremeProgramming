@@ -1,0 +1,173 @@
+================================================================
+ETAPA 5 - RETROSPECTIVA (XP)
+Sistema de Gestao de Matriculas - Escola de Idiomas
+Disciplina: 10275 - Engenharia de Software
+Data: 22/05/2026
+Estorias entregues na iteracao 1: US01, US02, US03, US04, US05
+================================================================
+
+
+----------------------------------------------------------------
+1. O QUE FUNCIONOU BEM
+----------------------------------------------------------------
+
+   - Escopo curto e bem definido: US01..US05 entregaram um
+     fluxo end-to-end (cadastrar -> matricular -> listar ->
+     cancelar) em uma unica iteracao curta.
+   - Design simples (listas em memoria e poucas classes:
+     Aluno, Curso, Matricula, Sistema, Menu) - facil de ler,
+     facil de mudar.
+   - Menu em console manteve a interface enxuta e permitiu
+     demonstrar valor para o cliente ja na primeira release.
+   - Quando o cliente pediu novas regras na revisao
+     ("nao duplicar matricula", "impedir sem vagas",
+     "permitir cancelamento"), a equipe conseguiu incorporar
+     rapidamente no mesmo ciclo, sem reescrever o sistema.
+   - Estimativas em story points se mostraram coerentes com
+     o esforco real: US01 e US02 (2 pts) realmente foram as
+     mais simples; US03 (3 pts) concentrou as regras de
+     negocio mais delicadas.
+
+
+----------------------------------------------------------------
+2. O QUE DIFICULTOU A COMUNICACAO
+----------------------------------------------------------------
+
+   - Algumas regras de negocio importantes (vagas ocupadas,
+     duplicidade de matricula, cancelamento) so apareceram
+     na revisao com cliente, e nao no levantamento inicial -
+     tiveram que ser adicionadas dentro da iteracao.
+   - Termos genericos como "validacoes" no escopo inicial
+     escondiam regras que so ficaram claras quando o cliente
+     viu a demo: reforca a importancia da revisao frequente.
+   - Identificacao de aluno e curso por ID numerico no console
+     gera atrito para o atendente; ficou registrado como ponto
+     a melhorar (busca por nome, ja prevista em estoria futura).
+
+
+----------------------------------------------------------------
+3. COMO OS TESTES (VERIFICACOES) AJUDARAM
+----------------------------------------------------------------
+
+   - Validacoes objetivas dos criterios de aceitacao
+     (nome nao vazio, vagas > 0, aluno/curso existentes,
+     sem duplicidade, vagas disponiveis, matricula existente
+     para cancelar) serviram como roteiro de teste manual
+     do menu.
+   - Cada estoria so foi considerada "pronta" quando seu
+     criterio de aceitacao foi exercitado pelo menu - isso
+     evitou retrabalho na revisao com o cliente.
+   - As mensagens de erro padronizadas (informando nome do
+     aluno/curso, contagem de vagas/matriculados) facilitaram
+     diagnosticar problemas em tempo de execucao.
+   - Limitacao: ainda nao ha testes automatizados; a verificacao
+     foi manual via menu. Automatizar testes da camada Sistema
+     fica como melhoria para a proxima iteracao.
+
+
+----------------------------------------------------------------
+4. SE HOUVE REFATORACAO UTIL
+----------------------------------------------------------------
+
+   - A regra de matricula precisou evoluir: passou de
+     "aluno e curso existem" para incluir "sem duplicidade"
+     e "ha vagas". Centralizar essa logica em Sistema.matricular
+     (em vez de espalhar pelo Menu) facilitou a evolucao sem
+     mexer na interface.
+   - O cancelamento (US05) reaproveitou a chave par
+     aluno_id/curso_id ja usada na duplicidade da US03 -
+     uma pequena refatoracao revelou conceito compartilhado
+     entre as duas regras.
+   - Mensagens de erro foram uniformizadas (sempre incluem
+     nome do aluno e/ou curso e a contagem relevante), o que
+     melhorou a usabilidade do menu sem aumentar a complexidade
+     do codigo.
+
+
+----------------------------------------------------------------
+5. COMO O CLIENTE INFLUENCIOU O DESENVOLVIMENTO
+----------------------------------------------------------------
+
+   - O cliente conduziu a priorizacao: comecamos por US01..US03
+     porque sem aluno e sem curso nao ha matricula.
+   - Na revisao, o cliente acrescentou US04 (listagens) ao
+     perceber que precisava conferir visualmente os cadastros
+     e quem estava matriculado em cada curso.
+   - Tambem na revisao surgiram tres regras adicionais na US03
+     e a nova US05 (cancelamento), motivadas pelo uso real
+     ("e se o curso lotar?", "e se eu marcar duas vezes o
+     mesmo aluno?", "e se eu precisar desfazer?").
+   - A presenca do cliente proximo ao time fez com que essas
+     mudancas entrassem na mesma iteracao, em vez de virarem
+     defeito ou retrabalho na entrega seguinte.
+
+
+----------------------------------------------------------------
+6. QUAIS PRATICAS DE XP FORAM REALMENTE APLICADAS
+----------------------------------------------------------------
+
+   APLICADAS PLENAMENTE:
+     - Jogo do Planejamento: estorias lidas, estimadas e
+       priorizadas com o cliente na Etapa 1.
+     - Pequenas Releases: uma iteracao curta entregando o
+       fluxo completo do sistema.
+     - Cliente Presente: cliente envolvido no levantamento,
+       na revisao e na repriorizacao.
+     - Design Simples: listas em memoria, poucas classes,
+       sem framework, sem persistencia.
+     - Simplicidade: validacoes adiadas (unicidade de e-mail,
+       busca por nome) ficaram fora ate o cliente confirmar
+       a necessidade.
+     - Coragem: aceitamos mudar a US03 dentro da iteracao
+       (duplicidade e vagas) e adicionar US05 quando o cliente
+       pediu, mesmo ja em desenvolvimento.
+     - Refatoracao: centralizacao das regras de matricula em
+       Sistema e uniformizacao das mensagens de erro.
+
+   APLICADAS PARCIALMENTE:
+     - Testes: feitos manualmente via menu, guiados pelos
+       criterios de aceitacao. Ainda nao automatizados.
+     - Programacao em Pares: depende da dinamica do grupo;
+       quando praticada, ajudou a discutir regras de negocio
+       em voz alta antes de codificar.
+
+   NAO APLICADAS NESTA ITERACAO:
+     - Integracao Continua / pipeline automatizado.
+     - Padrao de codificacao formalizado em ferramenta de lint.
+     - Metafora compartilhada documentada (alem do nome das
+       classes do dominio).
+
+
+----------------------------------------------------------------
+7. ACOES PARA A PROXIMA ITERACAO
+----------------------------------------------------------------
+
+   1) Automatizar testes da classe Sistema (matricular,
+      cancelar_matricula, listar_alunos_do_curso) -
+      cobrir os casos felizes e os de erro.
+   2) Implementar busca de aluno por nome para reduzir o
+      atrito do uso por ID no menu.
+   3) Avaliar com o cliente a unicidade de e-mail e a
+      edicao/remocao de alunos e cursos.
+   4) Levantar com o cliente se ha necessidade de
+      persistencia (arquivo simples ou banco), agora que
+      o fluxo basico esta validado.
+   5) Combinar sessoes regulares de programacao em pares
+      para as regras de negocio mais sensiveis.
+
+
+----------------------------------------------------------------
+8. CONCLUSAO
+----------------------------------------------------------------
+
+A iteracao 1 entregou um sistema executavel, demonstravel e
+ja absorveu mudancas pedidas pelo cliente sem comprometer o
+prazo, evidenciando o valor das praticas de XP - especialmente
+Cliente Presente, Pequenas Releases, Design Simples e Coragem
+para mudar. Os principais pontos de evolucao para a proxima
+iteracao sao automatizar testes e melhorar a experiencia de
+busca no menu.
+
+================================================================
+FIM - ETAPA 5
+================================================================
